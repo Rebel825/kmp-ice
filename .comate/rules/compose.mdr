@@ -1,0 +1,241 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+# Compose编码规范
+
+## 1. Composable函数命名规范
+
+### 1.1 函数命名规则
+[强制] 显示界面的Composable函数（无返回值）使用大驼峰命名
+[强制] 有返回值的Composable函数使用小驼峰命名
+
+```kotlin
+// 显示界面的Composable函数
+@Composable
+fun TopAppBar(
+    // ...
+)
+
+// 有返回值的Composable函数
+@Composable
+fun topAppBarColors(
+    // ...
+): TopAppBarColors
+```
+
+### 1.2 函数参数排序
+[强制] 强制参数在前，有默认值的参数在后
+[强制] Modifier参数放在有默认值参数的第一位
+
+```kotlin
+@Composable
+fun TopAppBar(
+    title: @Composable () -> Unit,
+    modifier: Modifier = Modifier,
+    navigationIcon: @Composable () -> Unit = {},
+    actions: @Composable RowScope.() -> Unit = {},
+    expandedHeight: Dp = TopAppBarDefaults.TopAppBarExpandedHeight,
+    windowInsets: WindowInsets = TopAppBarDefaults.windowInsets,
+    colors: TopAppBarColors = TopAppBarDefaults.topAppBarColors(),
+    scrollBehavior: TopAppBarScrollBehavior? = null
+)
+```
+
+## 2. Composable函数设计原则
+
+### 2.1 依赖注入
+[强制] 依赖应通过参数传递，不应在函数内部创建
+
+```kotlin
+// 反例
+@Composable
+private fun MyComposable() {
+    val viewModel = viewModel<MyViewModel>()
+    // ...
+}
+
+// 正例
+@Composable
+private fun MyComposable(
+    viewModel: MyViewModel = viewModel(),
+) {
+    // ...
+}
+```
+
+### 2.2 单一职责
+[强制] Composable函数应只负责显示界面或返回值，不可同时兼顾两者
+
+### 2.3 不可变类型
+[强制] Composable函数之间不要传递可变类型（ArrayList<T>, MutableState<T>等）
+
+### 2.4 内容完整性
+[强制] Composable函数的内容正确性不能依赖调用方
+
+```kotlin
+// 反例
+Column {
+    InnerContent()
+}
+
+@Composable
+private fun InnerContent() {
+    Text(...)
+    Image(...)
+    Button(...)
+}
+
+// 正例
+@Composable
+private fun InnerContent() {
+    Column {
+        Text(...)
+        Image(...)
+        Button(...)
+    }
+}
+```
+
+## 3. CompositionLocal规范
+
+### 3.1 命名规范
+[强制] CompositionLocal命名应以Local前缀开头，格式：Local + 数据类型
+
+```kotlin
+val LocalDensity = staticCompositionLocalOf<Density> {
+    noLocalProvidedFor("LocalDensity")
+}
+```
+
+## 4. 预览函数规范
+
+### 4.1 命名规范
+[强制] 单个预览函数使用Preview后缀
+[强制] 多个预览函数使用Previews后缀
+[强制] 预览函数必须是private
+
+## 5. State管理规范
+
+### 5.1 状态提升
+[强制] 所有逻辑应向上提升
+[强制] 页面至少包含两个Composable函数：一个处理逻辑，一个负责显示
+[强制] 状态持有者实例（ViewModel）、状态数据流实例只允许在逻辑处理函数中持有
+
+```kotlin
+@Composable
+private fun LearnRoute(
+    navController: NavController,
+    viewModel: LearnVM = koinViewModel(),
+) {
+    val text by viewModel.text.collectAsStateWithLifecycle()
+
+    LearnScreen(
+        onBackClick = { navController.navigateUp() },
+        text = text,
+    )
+}
+
+@Composable
+private fun LearnScreen(
+    onBackClick: () -> Unit,
+    text: String,
+) {
+    TitleBarWithBack(onBackClick = onBackClick) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            Text(
+                text = text,
+                modifier = Modifier.align(Alignment.Center),
+            )
+        }
+    }
+}
+```
+
+### 5.2 remember使用
+[强制] Compose state在Composable函数内必须使用remember
+
+```kotlin
+var isSuccess by remember { mutableStateOf(false) }
+```
+
+### 5.3 不可变类型
+[建议] 尽可能使用@Immutable注解类
+[建议] 避免使用不稳定的集合，推荐使用Kotlinx Immutable集合
+
+```kotlin
+@Immutable
+data class StringList(val items: List<String>)
+// ...
+val list: StringList = StringList(yourList)
+```
+
+## 6. Modifier使用规范
+
+### 6.1 参数暴露
+[强制] 自定义公共组件必须暴露Modifier参数
+
+### 6.2 唯一性原则
+[强制] 一个Compose组件对应一个Modifier，不可重复使用
+
+```kotlin
+@Composable
+private fun InnerContent(modifier: Modifier = Modifier) {
+    Column(modifier) {
+        Text(Modifier.clickable(), ...)
+        Image(Modifier.size(), ...)
+        Button(Modifier, ...)
+    }
+}
+```
+
+### 6.3 默认值
+[强制] Modifier参数必须设置默认值
+[强制] 不要使用Modifier扩展函数，使用Modifier.composed
+
+## 7. 资源使用规范
+
+### 7.1 图标资源
+[建议] 简单小图标使用ImageVector矢量图
+[建议] 使用Valkyrie插件将SVG转为ImageVector
+
+### 7.2 资源命名
+[强制] Compose资源命名需要带上模块名（如：search_ic_back）
+
+## 8. 页面命名规范
+
+### 8.1 导航相关命名
+[强制] 导航目的地命名：`Route + 功能`
+[强制] 导航目的地页面命名：`功能 + Route`
+[强制] 导航注册命名：小驼峰格式的导航目的地页面命名
+
+```kotlin
+// 导航目的地
+@Serializable
+data class RouteMainSearch(
+    val defaultSearchText: String = "",
+)
+
+// 导航注册
+fun NavGraphBuilder.mainSearchRoute() {}
+
+// 导航目的地页面
+@Composable
+private fun MainSearchRoute()
+```
+
+### 8.2 文件命名
+[强制] 所有包含Compose页面的文件都以Screen为后缀（如：MainSearchScreen）
+
+## 9. 文字大小规范
+[强制] 文字使用单位DP，避免响应系统字体大小设置
+
+```kotlin
+fontSize = 24.dp.toSp()
+```
+
+## 附录：规范优先级
+本规范与kotlin.mdr规范共同使用，当规范冲突时：
+1. 本规范中Compose相关规则优先
+2. kotlin.mdr中通用Kotlin规则作为补充

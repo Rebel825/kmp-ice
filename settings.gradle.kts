@@ -64,3 +64,4 @@ include(":data-core:common")
 include(":data-core:network")
 
 include(":data-base:common")
+include(":ui-base:resource")

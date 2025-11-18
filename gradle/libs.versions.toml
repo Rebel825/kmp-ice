@@ -42,6 +42,7 @@ androidCompileSdk = "36"
 androidMinSdk = "24"
 androidTargetSdk = "36"
 androidxActivityCompose = "1.10.1"
+jetbrainsKotlinJvm = "2.2.21"
 
 [libraries]
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
@@ -143,3 +144,4 @@ uiCoreModule = { id = "com.reach.kmp.ui.core", version = "unspecified" }
 uiBaseModule = { id = "com.reach.kmp.ui.base", version = "unspecified" }
 dataCoreModule = { id = "com.reach.kmp.data.core", version = "unspecified" }
 dataBaseModule = { id = "com.reach.kmp.data.base", version = "unspecified" }
+jetbrainsKotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }

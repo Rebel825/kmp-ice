@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.reach.kmp.shared
+package com.reach.kmp.ui.base.imagevector
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor

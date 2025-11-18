@@ -1,0 +1,28 @@
+# SVG转Compose ImageVector规范
+
+## 1. 文件位置
+[强制] 必须放置在：`ui-base/resource/src/commonMain/kotlin/com/mars/ui/base/resource/imagevector/`
+[强制] 包名：`com.mars.ui.base.resource.imagevector`
+
+## 2. 命名规范
+[强制] 文件名：直接使用SVG图片名称，如`Transfer.kt`
+[强制] 变量名：`MarsIcons.[图标名称]` (大驼峰命名)
+[强制] 缓存变量：`private var _[图标名称小写]: ImageVector? = null`
+
+## 3. 实现原则
+[强制] 必须保持原始SVG路径数据不变
+[强制] 仅允许修改包名、文件名和变量名
+[强制] 禁止修改SVG路径实现逻辑
+
+## 4. 生成后检查
+[强制] 生成完成后必须：
+1. 自动对比原始代码与生成代码的diff
+2. 确认仅修改了允许修改的部分（包名、文件名、变量名）
+3. 确认SVG路径数据（坐标、颜色、描边属性等）完全一致
+4. 将diff结果输出到日志或控制台
+
+## 5. 规范优先级
+本规范与compose.mdr、kotlin.mdr规范共同使用，当规范冲突时：
+1. 本规范中SVG转Compose相关规则优先
+2. compose.mdr中Compose相关规则作为补充
+3. kotlin.mdr中通用Kotlin规则作为补充
