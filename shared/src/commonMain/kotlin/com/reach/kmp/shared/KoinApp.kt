@@ -16,14 +16,11 @@
 
 package com.reach.kmp.shared
 
-import com.reach.kmp.data.core.audio.AudioModule
-import com.reach.kmp.feature.ice.IceModule
-import com.reach.kmp.feature.learn.LearnModule
 import org.koin.core.annotation.KoinApplication
 import org.koin.ksp.generated.startKoin
 
 @KoinApplication(
-    modules = [SharedModule::class] + AudioModule,
+    modules = [SharedModule::class],
 )
 object KoinApp {
     var isInit = false

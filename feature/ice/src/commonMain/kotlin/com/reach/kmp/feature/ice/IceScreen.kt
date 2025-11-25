@@ -49,7 +49,7 @@ private fun IceScreen(
         TopAppBar(
             title = { Text("Ice List") },
             navigationIcon = {
-                IconButton(onClick = { navController.na() }) {
+                IconButton(onClick = { navController.popBackStack() }) {
                     Icon(Icons.Default.ArrowBack, contentDescription = "Back")
                 }
             },
