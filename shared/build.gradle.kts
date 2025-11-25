@@ -22,9 +22,10 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(projects.uiCore.common)
-            implementation(projects.feature.bingwallpaper)
+            implementation(projects.uiBase.common)
             implementation(projects.feature.compose)
             implementation(projects.feature.learn)
+            implementation(projects.feature.ice)
         }
 
         androidMain.dependencies {

@@ -16,13 +16,14 @@
 
 package com.reach.kmp.shared
 
-import com.reach.kmp.feature.bingwallpaper.BingWallpaperModule
+import com.reach.kmp.data.core.audio.AudioModule
+import com.reach.kmp.feature.ice.IceModule
 import com.reach.kmp.feature.learn.LearnModule
 import org.koin.core.annotation.KoinApplication
 import org.koin.ksp.generated.startKoin
 
 @KoinApplication(
-    modules = [LearnModule::class, BingWallpaperModule::class],
+    modules = [SharedModule::class] + AudioModule,
 )
 object KoinApp {
     var isInit = false

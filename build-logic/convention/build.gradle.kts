@@ -53,11 +53,6 @@ gradlePlugin {
             implementationClass = "FeatureModulePlugin"
         }
 
-        register("FeatureDataModulePlugin") {
-            id = "com.reach.kmp.feature.data"
-            implementationClass = "FeatureDataModulePlugin"
-        }
-
         register("UiCoreModulePlugin") {
             id = "com.reach.kmp.ui.core"
             implementationClass = "UiCoreModulePlugin"

@@ -50,18 +50,18 @@ include(":app-wasm")
 
 include(":shared")
 
-include(":feature:bingwallpaper")
+include(":feature:audio")
 include(":feature:compose")
 include(":feature:learn")
+include(":feature:ice")
 
 include(":ui-core:common")
 
 include(":ui-base:common")
-
-include(":feature-data:bingwallpaper")
+include(":ui-base:resource")
 
 include(":data-core:common")
 include(":data-core:network")
+include(":data-core:audio")
 
 include(":data-base:common")
-include(":ui-base:resource")
